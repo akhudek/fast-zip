@@ -117,6 +117,7 @@
   "Returns the loc of the leftmost child of the node at this loc,
   or nil if no children"
   [^ZipperLocation loc]
+  (println loc)
   (when (branch? loc)
     (when-let [cs (children loc)]
       (let [node (.node loc), path ^ZipperPath (.path loc)]
@@ -195,7 +196,7 @@
 (defn replace
   "Replaces the node at this loc, without moving"
   [^ZipperLocation loc node]
-  (ZipperLocation. (.zip loc) node (assoc (.path loc) :changed? true)))
+  (ZipperLocation. (.zip loc) node (if-let [path (.path loc)] (assoc path :changed? true))))
 
 (defn insert-child
   "Inserts the item as the leftmost child of the node at this loc, without moving"
