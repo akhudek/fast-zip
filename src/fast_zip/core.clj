@@ -117,7 +117,6 @@
   "Returns the loc of the leftmost child of the node at this loc,
   or nil if no children"
   [^ZipperLocation loc]
-  (println loc)
   (when (branch? loc)
     (when-let [cs (children loc)]
       (let [node (.node loc), path ^ZipperPath (.path loc)]
