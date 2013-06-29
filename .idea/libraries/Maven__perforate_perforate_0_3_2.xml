@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: perforate:perforate:0.3.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/perforate/perforate/0.3.2/perforate-0.3.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/perforate/perforate/0.3.2/perforate-0.3.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/perforate/perforate/0.3.2/perforate-0.3.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,55 +1,51 @@
 (ns fast-zip.core-test
-  (:require #_[clojure.test :refer :all]
-            [fast-zip.core :as fz]
-            [clojure.zip :as z]
-            [criterium.core :refer :all]))
+  (:require
+    [clojure.test :refer :all]
+    [fast-zip.core :as z]))
 
-(set! *warn-on-reflection* true)
+(def data '[[a * b] + [c * d]])
+(def dz (z/vector-zip data))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest vector-zipper-tests
+  (testing "Basic navigation"
+    (is (= (z/node (z/right (z/down (z/right (z/right (z/down dz))))))
+          '* ))
+    (is (= (z/lefts (z/right (z/down (z/right (z/right (z/down dz))))))
+          '(c)))
+    (is (= (z/rights (z/right (z/down (z/right (z/right (z/down dz))))))
+          '(d)))
+    (is (= (z/node (z/up (z/up (z/right (z/down (z/right (z/right (z/down dz))))))))
+          data))
+    (is (= (z/path (z/right (z/down (z/right (z/right (z/down dz))))))
+          '[[[a * b] + [c * d]] [c * d]]))
+    (is (= (-> dz z/down z/right z/right z/down z/right z/node)
+          '*)))
 
-
-(def big-vec (vec (repeat 10 (vec (repeat 10 (vec (range 10)))))))
-
-(defn zip-test1
-  []
-  (loop [i 0, loc (z/vector-zip big-vec)]
-    (if (z/end? loc)
-      i
-      (recur (if (integer? (z/node loc)) (+ i (z/node loc)) i) (z/next loc)))))
-
-(defn zip-test2
-  []
-  (loop [i 0, loc (fz/vector-zip big-vec)]
-    (if (fz/end? loc)
-      i
-      (recur (if (integer? (fz/node loc)) (+ i (fz/node loc)) i) (fz/next loc)))))
-
-(bench (zip-test1))
-
-;Evaluation count : 60060 in 60 samples of 1001 calls.
-;Execution time mean : 996.067561 µs
-;Execution time std-deviation : 4.652621 µs
-;Execution time lower quantile : 987.152892 µs ( 2.5%)
-;Execution time upper quantile : 1.006544 ms (97.5%)
-;Overhead used : 1.953928 ns
-;
-;Found 4 outliers in 60 samples (6.6667 %)
-;low-severe	 4 (6.6667 %)
-;Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
-
-(bench (zip-test2))
-
-;Evaluation count : 154860 in 60 samples of 2581 calls.
-;Execution time mean : 390.840536 µs
-;Execution time std-deviation : 4.201021 µs
-;Execution time lower quantile : 384.734195 µs ( 2.5%)
-;Execution time upper quantile : 402.615985 µs (97.5%)
-;Overhead used : 1.953928 ns
-;
-;Found 5 outliers in 60 samples (8.3333 %)
-;low-severe	 3 (5.0000 %)
-;low-mild	 2 (3.3333 %)
-;Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+  (testing "Edits"
+    (is (= (-> dz z/down z/right z/right z/down z/right (z/replace '/) z/root)
+          '[[a * b] + [c / d]]))
+    (is (= (-> dz z/next z/next (z/edit str) z/next z/next z/next (z/replace '/) z/root)
+          '[["a" * b] / [c * d]]))
+    (is (= (-> dz z/next z/next z/next z/next z/next z/next z/next z/next z/next z/remove z/root)
+          '[[a * b] + [c *]]))
+    (is (= (-> dz z/next z/next z/next z/next z/next z/next z/next z/next z/next z/remove (z/insert-right 'e) z/root)
+          '[[a * b] + [c * e]]))
+    (is (= (-> dz z/next z/next z/next z/next z/next z/next z/next z/next z/next z/remove z/up (z/append-child 'e) z/root)
+          '[[a * b] + [c * e]]))
+    (is (z/end? (-> dz z/next z/next z/next z/next z/next z/next z/next z/next z/next z/remove z/next)))
+    (is (= (-> dz z/next z/remove z/next z/remove z/root)
+          '[[c * d]]))
+    (is (= '[[a / b] + [c / d]]
+          (loop [loc dz]
+            (if (z/end? loc)
+              (z/root loc)
+              (recur (z/next (if (= '* (z/node loc))
+                             (z/replace loc '/)
+                             loc)))))))
+    (is (= '[[a b] + [c d]]
+          (loop [loc dz]
+            (if (z/end? loc)
+              (z/root loc)
+              (recur (z/next (if (= '* (z/node loc))
+                             (z/remove loc)
+                             loc)))))))))

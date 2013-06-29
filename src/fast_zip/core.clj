@@ -15,8 +15,6 @@
   fast-zip.core
   (:refer-clojure :exclude (replace remove next)))
 
-(set! *warn-on-reflection* true)
-
 (defrecord ZipperPath [l r ppath pnodes changed?])
 
 (defprotocol IZipper
@@ -61,10 +59,13 @@
   "Returns a zipper for nested vectors, given a root vector"
   {:added "1.0"}
   [root]
-  (zipper vector?
-    seq
-    (fn [node children] (with-meta (vec children) (meta node)))
-    root))
+  (ZipperLocation.
+    (reify IZipper
+      (zip-branch? [_ node] (vector? node))
+      (zip-children [_ node] (seq node))
+      (zip-make-node [_ node children] (with-meta (vec children) (meta node))))
+    root
+    nil))
 
 (defn xml-zip
   "Returns a zipper for xml elements (as from xml/parse),
@@ -256,43 +257,3 @@
   "Replaces the node at this loc with the value of (f node args)"
   [^ZipperLocation loc f & args]
   (replace loc (apply f (.node loc) args)))
-
-
-(comment
-
-  (load-file "/Users/rich/dev/clojure/src/zip.clj")
-  (refer 'zip)
-  (def data '[[a * b] + [c * d]])
-  (def dz (vector-zip data))
-
-  (right (down (right (right (down dz)))))
-  (lefts (right (down (right (right (down dz))))))
-  (rights (right (down (right (right (down dz))))))
-  (up (up (right (down (right (right (down dz)))))))
-  (path (right (down (right (right (down dz))))))
-
-  (-> dz down right right down right)
-  (-> dz down right right down right (replace '/) root)
-  (-> dz next next (edit str) next next next (replace '/) root)
-  (-> dz next next next next next next next next next remove root)
-  (-> dz next next next next next next next next next remove (insert-right 'e) root)
-  (-> dz next next next next next next next next next remove up (append-child 'e) root)
-
-  (end? (-> dz next next next next next next next next next remove next))
-
-  (-> dz next remove next remove root)
-
-  (loop [loc dz]
-    (if (end? loc)
-      (root loc)
-      (recur (next (if (= '* (node loc))
-                     (replace loc '/)
-                     loc)))))
-
-  (loop [loc dz]
-    (if (end? loc)
-      (root loc)
-      (recur (next (if (= '* (node loc))
-                     (remove loc)
-                     loc)))))
-  )
