@@ -14,4 +14,7 @@
                [criterium "0.4.1"]]}}
 
   :perforate {:environments [{:namespaces [fast-zip.core-bench]}]}
-  )
+  :scm {:name "git"
+        :url  "https://github.com/akhudek/fast-zip"}
+  :deploy-repositories
+  [["clojars" {:signing {:gpg-key "D8B883CA"}}]])
