@@ -30,28 +30,25 @@
 (defcase vector-zip-bench :fast-zip
   [] (zip-test2))
 
-
-;Goal:  Benchmark vector zip.
 ;-----
+;Case:  :clojure.zip
+;Evaluation count : 74400 in 60 samples of 1240 calls.
+;Execution time mean : 832.891667 µs
+;Execution time std-deviation : 23.931702 µs
+;Execution time lower quantile : 804.725806 µs ( 2.5%)
+;Execution time upper quantile : 894.015706 µs (97.5%)
+;
+;Found 3 outliers in 60 samples (5.0000 %)
+;low-severe	 3 (5.0000 %)
+;Variance from outliers : 15.7905 % Variance is moderately inflated by outliers
+;
 ;Case:  :fast-zip
-;Evaluation count : 57900 in 60 samples of 965 calls.
-;Execution time mean : 1.061294 ms
-;Execution time std-deviation : 18.324036 µs
-;Execution time lower quantile : 1.040463 ms ( 2.5%)
-;Execution time upper quantile : 1.101971 ms (97.5%)
+;Evaluation count : 163260 in 60 samples of 2721 calls.
+;Execution time mean : 386.074342 µs
+;Execution time std-deviation : 13.529663 µs
+;Execution time lower quantile : 369.365674 µs ( 2.5%)
+;Execution time upper quantile : 415.512211 µs (97.5%)
 ;
 ;Found 6 outliers in 60 samples (10.0000 %)
-;low-severe	 5 (8.3333 %)
-;low-mild	 1 (1.6667 %)
-;Variance from outliers : 6.2784 % Variance is slightly inflated by outliers
-;
-;Case:  :clojure.zip
-;Evaluation count : 22140 in 60 samples of 369 calls.
-;Execution time mean : 2.742761 ms
-;Execution time std-deviation : 58.216480 µs
-;Execution time lower quantile : 2.667016 ms ( 2.5%)
-;Execution time upper quantile : 2.867317 ms (97.5%)
-;
-;Found 1 outliers in 60 samples (1.6667 %)
-;low-severe	 1 (1.6667 %)
-;Variance from outliers : 9.4220 % Variance is slightly inflated by outliers
+;low-severe	 6 (10.0000 %)
+;Variance from outliers : 22.1788 % Variance is moderately inflated by outliers

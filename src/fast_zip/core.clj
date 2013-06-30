@@ -67,22 +67,34 @@
 
 (defn node
   "Returns the node at loc"
+  {:inline (fn [loc]
+             (let [tloc (vary-meta loc assoc :tag `ZipperLocation)]
+               `(.node ~tloc)))}
   [^ZipperLocation loc]
   (.node loc))
 
 (defn branch?
   "Returns true if the node at loc is a branch"
+  {:inline (fn [loc]
+             (let [tloc (vary-meta loc assoc :tag `ZipperLocation)]
+               `((.branch? ~tloc) (.node ~tloc))))}
   [^ZipperLocation loc]
   ((.branch? loc) (.node loc)))
 
 (defn children
   "Returns a seq of the children of node at loc, which must be a branch"
+  {:inline (fn [loc]
+             (let [tloc (vary-meta loc assoc :tag `ZipperLocation)]
+               `((.children ~tloc) (.node ~tloc))))}
   [^ZipperLocation loc]
   ((.children loc) (.node loc)))
 
 (defn make-node
   "Returns a new branch node, given an existing node and new children.
   The loc is only used to supply the constructor."
+  {:inline (fn [loc node children]
+             (let [tloc (vary-meta loc assoc :tag `ZipperLocation)]
+               ` ((.make-node ~tloc) node children)))}
   [^ZipperLocation loc node children]
   ((.make-node loc) node children))
 
@@ -250,8 +262,8 @@
       (or
         (and (branch? loc) (down loc))
         (right loc)
-         (loop [p loc]
-           (if (up p)
+        (loop [p loc]
+          (if (up p)
             (or (right (up p)) (recur (up p)))
             (ZipperLocation. (.branch? loc) (.children loc) (.make-node loc) (.node p) :end)))))))
 
