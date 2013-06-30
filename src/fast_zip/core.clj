@@ -17,12 +17,7 @@
 
 (defrecord ZipperPath [l r ppath pnodes changed?])
 
-(defprotocol IZipper
-  (zip-branch? [this node] "Return true if can have children, even if it currently doesn't.")
-  (zip-children [this node] "Return a seq of it's children.")
-  (zip-make-node [this node children] "Given a seq of children, return a new branch node with the supplied children."))
-
-(defrecord ZipperLocation [zip node path])
+(defrecord ZipperLocation [branch? children make-node node path])
 
 (defn zipper
   "Creates a new zipper structure.
@@ -38,13 +33,7 @@
   root is the root node."
   {:added "1.0"}
   [branch? children make-node root]
-  (ZipperLocation.
-    (reify IZipper
-      (zip-branch? [_ node] (branch? node))
-      (zip-children [_ node] (children node))
-      (zip-make-node [_ node children] (make-node node children)))
-    root
-    nil))
+  (ZipperLocation. branch? children make-node root nil))
 
 (defn seq-zip
   "Returns a zipper for nested sequences, given a root sequence"
@@ -59,13 +48,11 @@
   "Returns a zipper for nested vectors, given a root vector"
   {:added "1.0"}
   [root]
-  (ZipperLocation.
-    (reify IZipper
-      (zip-branch? [_ node] (vector? node))
-      (zip-children [_ node] (seq node))
-      (zip-make-node [_ node children] (with-meta (vec children) (meta node))))
-    root
-    nil))
+  (zipper
+    vector?
+    seq
+    (fn [node children] (with-meta (vec children) (meta node)))
+    root))
 
 (defn xml-zip
   "Returns a zipper for xml elements (as from xml/parse),
@@ -86,18 +73,18 @@
 (defn branch?
   "Returns true if the node at loc is a branch"
   [^ZipperLocation loc]
-  (zip-branch? (.zip loc) (.node loc)))
+  ((.branch? loc) (.node loc)))
 
 (defn children
   "Returns a seq of the children of node at loc, which must be a branch"
   [^ZipperLocation loc]
-  (zip-children (.zip loc) (.node loc)))
+  ((.children loc) (.node loc)))
 
 (defn make-node
   "Returns a new branch node, given an existing node and new children.
   The loc is only used to supply the constructor."
   [^ZipperLocation loc node children]
-  (zip-make-node (.zip loc) node children))
+  ((.make-node loc) node children))
 
 (defn path
   "Returns a seq of nodes leading to this loc"
@@ -122,7 +109,9 @@
     (when-let [cs (children loc)]
       (let [node (.node loc), path ^ZipperPath (.path loc)]
         (ZipperLocation.
-          (.zip loc)
+          (.branch? loc)
+          (.children loc)
+          (.make-node loc)
           (first cs)
           (ZipperPath. [] (clojure.core/next cs) path (if path (conj (.pnodes path) node) [node]) nil))))))
 
@@ -134,10 +123,17 @@
       (let [pnode (peek pnodes)]
         (if (.changed? path)
           (ZipperLocation.
-            (.zip loc)
+            (.branch? loc)
+            (.children loc)
+            (.make-node loc)
             (make-node loc pnode (concat (.l path) (cons node (.r path))))
             (if-let [ppath (.ppath path)] (assoc ppath :changed? true)))
-          (ZipperLocation. (.zip loc) pnode (.ppath path)))))))
+          (ZipperLocation.
+            (.branch? loc)
+            (.children loc)
+            (.make-node loc)
+            pnode
+            (.ppath path)))))))
 
 (defn root
   "zips all the way up and returns the root node, reflecting any changes."
@@ -154,14 +150,24 @@
   [^ZipperLocation loc]
   (let [path ^ZipperPath (.path loc)]
     (when-let [r (and path (.r path))]
-      (ZipperLocation. (.zip loc) (first r) (assoc path :l (conj (.l path) (.node loc)) :r (clojure.core/next r))))))
+      (ZipperLocation.
+        (.branch? loc)
+        (.children loc)
+        (.make-node loc)
+        (first r)
+        (assoc path :l (conj (.l path) (.node loc)) :r (clojure.core/next r))))))
 
 (defn rightmost
   "Returns the loc of the rightmost sibling of the node at this loc, or self"
   [^ZipperLocation loc]
   (let [path ^ZipperPath (.path loc)]
     (if-let [r (and path (.r path))]
-      (ZipperLocation. (.zip loc) (last r) (assoc path :l (apply conj (.l path) (.node loc) (butlast r)) :r nil))
+      (ZipperLocation.
+        (.branch? loc)
+        (.children loc)
+        (.make-node loc)
+        (last r)
+        (assoc path :l (apply conj (.l path) (.node loc) (butlast r)) :r nil))
       loc)))
 
 (defn left
@@ -169,34 +175,59 @@
   [^ZipperLocation loc]
   (let [path ^ZipperPath (.path loc)]
     (when (and path (seq (.l path)))
-      (ZipperLocation. (.zip loc) (peek (.l path)) (assoc path :l (pop (.l path)) :r (cons (.node loc) (.r path)))))))
+      (ZipperLocation.
+        (.branch? loc)
+        (.children loc)
+        (.make-node loc)
+        (peek (.l path))
+        (assoc path :l (pop (.l path)) :r (cons (.node loc) (.r path)))))))
 
 (defn leftmost
   "Returns the loc of the leftmost sibling of the node at this loc, or self"
   [^ZipperLocation loc]
   (let [path ^ZipperPath (.path loc)]
     (if (and path (seq (.l path)))
-      (ZipperLocation. (.zip loc) (first (.l path)) (assoc path :l [] :r (concat (rest (.l path)) [(.node loc)] (.r path))))
+      (ZipperLocation.
+        (.branch? loc)
+        (.children loc)
+        (.make-node loc)
+        (first (.l path))
+        (assoc path :l [] :r (concat (rest (.l path)) [(.node loc)] (.r path))))
       loc)))
 
 (defn insert-left
   "Inserts the item as the left sibling of the node at this loc, without moving"
   [^ZipperLocation loc item]
   (if-let [path ^ZipperPath (.path loc)]
-    (ZipperLocation. (.zip loc) (.node loc) (assoc path :l (conj (.l path) item) :changed? true))
+    (ZipperLocation.
+      (.branch? loc)
+      (.children loc)
+      (.make-node loc)
+      (.node loc)
+      (assoc path :l (conj (.l path) item) :changed? true))
     (throw (new Exception "Insert at top"))))
 
 (defn insert-right
   "Inserts the item as the right sibling of the node at this loc, without moving"
   [^ZipperLocation loc item]
   (if-let [path ^ZipperPath (.path loc)]
-    (ZipperLocation. (.zip loc) (.node loc) (assoc path :r (cons item (.r path)) :changed? true))
+    (ZipperLocation.
+      (.branch? loc)
+      (.children loc)
+      (.make-node loc)
+      (.node loc)
+      (assoc path :r (cons item (.r path)) :changed? true))
     (throw (new Exception "Insert at top"))))
 
 (defn replace
   "Replaces the node at this loc, without moving"
   [^ZipperLocation loc node]
-  (ZipperLocation. (.zip loc) node (if-let [path (.path loc)] (assoc path :changed? true))))
+  (ZipperLocation.
+    (.branch? loc)
+    (.children loc)
+    (.make-node loc)
+    node
+    (if-let [path (.path loc)] (assoc path :changed? true))))
 
 (defn insert-child
   "Inserts the item as the leftmost child of the node at this loc, without moving"
@@ -222,7 +253,7 @@
          (loop [p loc]
            (if (up p)
             (or (right (up p)) (recur (up p)))
-            (ZipperLocation. (.zip loc) (.node p) :end)))))))
+            (ZipperLocation. (.branch? loc) (.children loc) (.make-node loc) (.node p) :end)))))))
 
 (defn prev
   "Moves to the previous loc in the hierarchy, depth-first. If already at the root, returns nil."
@@ -244,11 +275,19 @@
   [^ZipperLocation loc]
   (if-let [path ^ZipperPath (.path loc)]
     (if (pos? (count (.l path)))
-      (loop [loc (ZipperLocation. (.zip loc) (peek (.l path)) (assoc path :l (pop (.l path)) :changed? true))]
+      (loop [loc (ZipperLocation.
+                   (.branch? loc)
+                   (.children loc)
+                   (.make-node loc)
+                   (peek (.l path))
+                   (assoc path :l (pop (.l path)) :changed? true))]
         (if-let [child (and (branch? loc) (down loc))]
           (recur (rightmost child))
           loc))
-      (ZipperLocation. (.zip loc)
+      (ZipperLocation.
+        (.branch? loc)
+        (.children loc)
+        (.make-node loc)
         (make-node loc (peek (.pnodes path)) (.r path))
         (if-let [ppath (.ppath path)] (and ppath (assoc ppath :changed? true)))))
     (throw (new Exception "Remove at top"))))
