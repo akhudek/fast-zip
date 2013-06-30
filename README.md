@@ -41,7 +41,8 @@ Evaluation count : 166320 in 60 samples of 2772 calls.
 Found 3 outliers in 60 samples (5.0000 %)
 	low-severe	 1 (1.6667 %)
 	low-mild	 2 (3.3333 %)
- Variance from outliers : 1.6389 % Variance is slightly inflated by outliers```
+ Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+```
 
 I've tested this in a large application that uses zippers in more complicated
 ways and got a similar speedup.
