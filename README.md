@@ -5,7 +5,7 @@ A modified version of clojure.zip that uses records and protocols internally.
 ## Usage
 
 ```clojure
-[fast-zip "0.1.0"]
+[fast-zip "0.2.0"]
 ```
 
 This is a drop in replacement for clojure.zip. Simply require ``fast-zip.core``
@@ -20,31 +20,35 @@ run, use ``lein perforate``.
 Goal:  Benchmark vector zip.
 -----
 Case:  :clojure.zip
-Evaluation count : 73200 in 60 samples of 1220 calls.
-             Execution time mean : 853.431270 µs
-    Execution time std-deviation : 22.330544 µs
-   Execution time lower quantile : 821.376230 µs ( 2.5%)
-   Execution time upper quantile : 907.143627 µs (97.5%)
+Evaluation count : 74820 in 60 samples of 1247 calls.
+             Execution time mean : 811.315704 µs
+    Execution time std-deviation : 20.717347 µs
+   Execution time lower quantile : 792.166800 µs ( 2.5%)
+   Execution time upper quantile : 871.133119 µs (97.5%)
 
-Found 2 outliers in 60 samples (3.3333 %)
+Found 6 outliers in 60 samples (10.0000 %)
 	low-severe	 2 (3.3333 %)
- Variance from outliers : 14.1442 % Variance is moderately inflated by outliers
+	low-mild	 4 (6.6667 %)
+ Variance from outliers : 12.6233 % Variance is moderately inflated by outliers
 
 Case:  :fast-zip
-Evaluation count : 162180 in 60 samples of 2703 calls.
-             Execution time mean : 385.903558 µs
-    Execution time std-deviation : 15.064595 µs
-   Execution time lower quantile : 367.073622 µs ( 2.5%)
-   Execution time upper quantile : 421.526082 µs (97.5%)
+Evaluation count : 166320 in 60 samples of 2772 calls.
+             Execution time mean : 361.219799 µs
+    Execution time std-deviation : 5.828158 µs
+   Execution time lower quantile : 355.780853 µs ( 2.5%)
+   Execution time upper quantile : 373.429293 µs (97.5%)
 
 Found 3 outliers in 60 samples (5.0000 %)
 	low-severe	 1 (1.6667 %)
 	low-mild	 2 (3.3333 %)
- Variance from outliers : 25.4515 % Variance is moderately inflated by outliers
-```
+ Variance from outliers : 1.6389 % Variance is slightly inflated by outliers```
 
 I've tested this in a large application that uses zippers in more complicated
 ways and got a similar speedup.
+
+## Thanks
+
+Thanks to Brandon Bloom for his help.
 
 ## License
 
