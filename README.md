@@ -19,28 +19,28 @@ run, use ``lein perforate``.
 ```
 Goal:  Benchmark vector zip.
 -----
-Case:  :fast-zip
-Evaluation count : 57900 in 60 samples of 965 calls.
-             Execution time mean : 1.061294 ms
-    Execution time std-deviation : 18.324036 µs
-   Execution time lower quantile : 1.040463 ms ( 2.5%)
-   Execution time upper quantile : 1.101971 ms (97.5%)
-
-Found 6 outliers in 60 samples (10.0000 %)
-	low-severe	 5 (8.3333 %)
-	low-mild	 1 (1.6667 %)
- Variance from outliers : 6.2784 % Variance is slightly inflated by outliers
-
 Case:  :clojure.zip
-Evaluation count : 22140 in 60 samples of 369 calls.
-             Execution time mean : 2.742761 ms
-    Execution time std-deviation : 58.216480 µs
-   Execution time lower quantile : 2.667016 ms ( 2.5%)
-   Execution time upper quantile : 2.867317 ms (97.5%)
+Evaluation count : 73200 in 60 samples of 1220 calls.
+             Execution time mean : 853.431270 µs
+    Execution time std-deviation : 22.330544 µs
+   Execution time lower quantile : 821.376230 µs ( 2.5%)
+   Execution time upper quantile : 907.143627 µs (97.5%)
 
-Found 1 outliers in 60 samples (1.6667 %)
+Found 2 outliers in 60 samples (3.3333 %)
+	low-severe	 2 (3.3333 %)
+ Variance from outliers : 14.1442 % Variance is moderately inflated by outliers
+
+Case:  :fast-zip
+Evaluation count : 162180 in 60 samples of 2703 calls.
+             Execution time mean : 385.903558 µs
+    Execution time std-deviation : 15.064595 µs
+   Execution time lower quantile : 367.073622 µs ( 2.5%)
+   Execution time upper quantile : 421.526082 µs (97.5%)
+
+Found 3 outliers in 60 samples (5.0000 %)
 	low-severe	 1 (1.6667 %)
- Variance from outliers : 9.4220 % Variance is slightly inflated by outliers
+	low-mild	 2 (3.3333 %)
+ Variance from outliers : 25.4515 % Variance is moderately inflated by outliers
 ```
 
 I've tested this in a large application that uses zippers in more complicated

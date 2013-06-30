@@ -8,6 +8,9 @@
 
   :plugins [[perforate "0.3.2"]]
 
+  ;; Prevent lein from disabling jvm optimizations.
+  :jvm-opts ^:replace []
+
   :profiles {:dev
              {:dependencies
               [[perforate "0.3.2"]
