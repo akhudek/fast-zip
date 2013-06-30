@@ -138,7 +138,7 @@
 (defn root
   "zips all the way up and returns the root node, reflecting any changes."
   [^ZipperLocation loc]
-  (if (= :end (.path loc))
+  (if (identical? :end (.path loc))
     (.node loc)
     (let [p (up loc)]
       (if p
@@ -245,7 +245,7 @@
   at the end, stays there."
   [^ZipperLocation loc]
   (let [path (.path loc)]
-    (if (= :end path)
+    (if (identical? :end path)
       loc
       (or
         (and (branch? loc) (down loc))
@@ -268,7 +268,7 @@
 (defn end?
   "Returns true if loc represents the end of a depth-first walk"
   [^ZipperLocation loc]
-  (= :end (.path loc)))
+  (identical? :end (.path loc)))
 
 (defn remove
   "Removes the node at loc, returning the loc that would have preceded it in a depth-first walk."
