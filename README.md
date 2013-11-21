@@ -50,7 +50,7 @@ ways and got a similar speedup.
 Thanks to
 
 * Brandon Bloom for his advice.
-* Zack Tellman
+* Zach Tellman
 
 ## License
 
