@@ -40,7 +40,7 @@
   {:added "1.0"}
   [root]
   (zipper seq?
-    identity
+    seq
     (fn [node children] (with-meta children (meta node)))
     root))
 
