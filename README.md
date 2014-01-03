@@ -1,6 +1,6 @@
 # fast-zip
 
-A modified version of clojure.zip that uses records and protocols internally.
+A modified version of clojure.zip that uses records internally.
 
 ## Usage
 
