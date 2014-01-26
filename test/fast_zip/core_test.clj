@@ -6,7 +6,19 @@
 (def data '[[a * b] + [c * d]])
 (def dz (z/vector-zip data))
 
-(deftest vector-zipper-tests
+(deftest zipper-tests
+  (testing "Edge cases"
+    (let [ez (z/seq-zip [])]
+      (is (nil? (z/path ez)))
+      (is (nil? (z/lefts ez)))
+      (is (nil? (z/rights ez)))
+      (is (nil? (z/down ez)))
+      (is (nil? (z/right ez)))
+      (is (nil? (z/left ez)))
+      (is (nil? (z/up ez)))
+      (is (= [] (z/node (z/seq-zip []))))
+      (is (= '() (z/node (z/seq-zip '()))))))
+
   (testing "Basic navigation"
     (is (= (z/node (z/right (z/down (z/right (z/right (z/down dz))))))
           '* ))
@@ -19,7 +31,15 @@
     (is (= (z/path (z/right (z/down (z/right (z/right (z/down dz))))))
           '[[[a * b] + [c * d]] [c * d]]))
     (is (= (-> dz z/down z/right z/right z/down z/right z/node)
-          '*)))
+          '*))
+    (is (= (-> dz z/down z/rights)
+           '(+ [c * d])))
+    (is (= (-> dz z/down z/right z/right z/lefts)
+           '([a * b] +)))
+    (is (= (-> dz z/down z/rightmost z/lefts)
+           '([a * b] +)))
+    (is (= (-> dz z/down z/right z/right z/leftmost z/rights)
+           '(+ [c * d]))))
 
   (testing "Edits"
     (is (= (-> dz z/down z/right z/right z/down z/right (z/replace '/) z/root)

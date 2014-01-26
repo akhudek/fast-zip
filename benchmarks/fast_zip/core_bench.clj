@@ -30,26 +30,23 @@
 (defcase vector-zip-bench :fast-zip
   [] (zip-test2))
 
+;; 0.3.0
 ;Goal:  Benchmark vector zip.
 ;-----
 ;Case:  :clojure.zip
-;Evaluation count : 75480 in 60 samples of 1258 calls.
-;Execution time mean : 805.666773 µs
-;Execution time std-deviation : 4.815877 µs
-;Execution time lower quantile : 797.942766 µs ( 2.5%)
-;Execution time upper quantile : 816.578299 µs (97.5%)
+;Evaluation count : 68400 in 60 samples of 1140 calls.
+;Execution time mean : 879.080906 µs
+;Execution time std-deviation : 11.090444 µs
+;Execution time lower quantile : 864.859649 µs ( 2.5%)
+;Execution time upper quantile : 907.783816 µs (97.5%)
 ;
-;Found 2 outliers in 60 samples (3.3333 %)
-;low-severe	 2 (3.3333 %)
+;Found 3 outliers in 60 samples (5.0000 %)
+;low-severe	 3 (5.0000 %)
 ;Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
 ;
 ;Case:  :fast-zip
-;Evaluation count : 297900 in 60 samples of 4965 calls.
-;Execution time mean : 202.892179 µs
-;Execution time std-deviation : 848.456881 ns
-;Execution time lower quantile : 201.212286 µs ( 2.5%)
-;Execution time upper quantile : 204.187311 µs (97.5%)
-;
-;Found 1 outliers in 60 samples (1.6667 %)
-;low-severe	 1 (1.6667 %)
-;Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+;Evaluation count : 226980 in 60 samples of 3783 calls.
+;Execution time mean : 259.947207 µs
+;Execution time std-deviation : 3.051484 µs
+;Execution time lower quantile : 255.424266 µs ( 2.5%)
+;Execution time upper quantile : 266.486446 µs (97.5%)

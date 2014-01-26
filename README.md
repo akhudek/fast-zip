@@ -5,7 +5,7 @@ A modified version of clojure.zip that uses records and protocols internally.
 ## Usage
 
 ```clojure
-[fast-zip "0.3.0"]
+[fast-zip "0.3.1"]
 ```
 
 This is a drop in replacement for clojure.zip. Simply require ``fast-zip.core``
@@ -16,34 +16,34 @@ instead of ``clojure.zip``.
 The below  traverses a vector zip with three levels and sums the numbers. To
 run, use ``lein perforate``.
 
-```
-Goal:  Benchmark vector zip.
------
-Case:  :clojure.zip
-Evaluation count : 75480 in 60 samples of 1258 calls.
-             Execution time mean : 805.666773 µs
-    Execution time std-deviation : 4.815877 µs
-   Execution time lower quantile : 797.942766 µs ( 2.5%)
-   Execution time upper quantile : 816.578299 µs (97.5%)
+    ======================
+    WARNING: Final GC required 1.450308932831415 % of runtime
+    Goal:  Benchmark vector zip.
+    -----
+    Case:  :fast-zip
+    Evaluation count : 246120 in 60 samples of 4102 calls.
+                 Execution time mean : 242.777689 µs
+        Execution time std-deviation : 1.965914 µs
+       Execution time lower quantile : 238.996103 µs ( 2.5%)
+       Execution time upper quantile : 247.075613 µs (97.5%)
+                       Overhead used : 1.947263 ns
 
-Found 2 outliers in 60 samples (3.3333 %)
-	low-severe	 2 (3.3333 %)
- Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+    Found 2 outliers in 60 samples (3.3333 %)
+        low-severe	 2 (3.3333 %)
+     Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
 
-Case:  :fast-zip
-Evaluation count : 297900 in 60 samples of 4965 calls.
-             Execution time mean : 202.892179 µs
-    Execution time std-deviation : 848.456881 ns
-   Execution time lower quantile : 201.212286 µs ( 2.5%)
-   Execution time upper quantile : 204.187311 µs (97.5%)
+    Case:  :clojure.zip
+    Evaluation count : 62820 in 60 samples of 1047 calls.
+                 Execution time mean : 960.326181 µs
+        Execution time std-deviation : 4.915537 µs
+       Execution time lower quantile : 950.592132 µs ( 2.5%)
+       Execution time upper quantile : 969.813479 µs (97.5%)
+                       Overhead used : 1.947263 ns
 
-Found 1 outliers in 60 samples (1.6667 %)
-	low-severe	 1 (1.6667 %)
- Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
-```
+## TODO
 
-I've tested this in a large application that uses zippers in more complicated
-ways and got a similar speedup.
+* Create benchmarks that represent more functionality and different use
+  cases.
 
 ## Thanks
 

@@ -1,4 +1,4 @@
-(defproject fast-zip "0.3.0"
+(defproject fast-zip "0.4.0"
   :description "A modification of clojure.zip that uses protocols and records."
   :url "https://github.com/akhudek/fast-zip"
   :license {:name "Eclipse Public License"
@@ -9,12 +9,12 @@
   :plugins [[perforate "0.3.2"]]
 
   ;; Prevent lein from disabling jvm optimizations.
-  :jvm-opts ^:replace []
+  :jvm-opts ^:replace ["-server"]
 
   :profiles {:dev
              {:dependencies
-              [[perforate "0.3.2"]
-               [criterium "0.4.1"]]}}
+              [[perforate "0.3.3"]
+               [criterium "0.4.3"]]}}
 
   :perforate {:environments [{:namespaces [fast-zip.core-bench]}]}
   :scm {:name "git"

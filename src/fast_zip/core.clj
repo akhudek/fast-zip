@@ -89,17 +89,17 @@
 (defn path
   "Returns a seq of nodes leading to this loc"
   [^ZipperLocation loc]
-  (.pnodes ^ZipperPath (.path loc)))
+  (if-let [p (.path loc)] (.pnodes ^ZipperPath p)))
 
 (defn lefts
   "Returns a seq of the left siblings of this loc"
   [^ZipperLocation loc]
-  (seq (.l ^ZipperPath (.path loc))))
+  (if-let [p (.path loc)] (seq (reverse (.l ^ZipperPath p)))))
 
 (defn rights
   "Returns a seq of the right siblings of this loc"
   [^ZipperLocation loc]
-  (.r ^ZipperPath (.path loc)))
+  (if-let [p (.path loc)] (.r ^ZipperPath p)))
 
 (defn down
   "Returns the loc of the leftmost child of the node at this loc,
@@ -113,7 +113,7 @@
           (.children loc)
           (.make-node loc)
           (first cs)
-          (ZipperPath. [] (clojure.core/next cs) path (if path (conj (.pnodes path) node) [node]) nil))))))
+          (ZipperPath. '() (clojure.core/next cs) path (if path (conj (.pnodes path) node) [node]) nil))))))
 
 (defn up
   "Returns the loc of the parent of the node at this loc, or nil if at the top"
@@ -126,7 +126,7 @@
             (.branch? loc)
             (.children loc)
             (.make-node loc)
-            (make-node loc pnode (concat (.l path) (cons node (.r path))))
+            (make-node loc pnode (concat (reverse (.l path)) (cons node (.r path))))
             (if-let [ppath (.ppath path)] (assoc ppath :changed? true)))
           (ZipperLocation.
             (.branch? loc)
@@ -191,8 +191,8 @@
         (.branch? loc)
         (.children loc)
         (.make-node loc)
-        (first (.l path))
-        (assoc path :l [] :r (concat (rest (.l path)) [(.node loc)] (.r path))))
+        (peek (.l path))
+        (assoc path :l [] :r (concat (clojure.core/next (reverse (.l path))) [(.node loc)] (.r path))))
       loc)))
 
 (defn insert-left
