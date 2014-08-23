@@ -179,7 +179,7 @@
         (.-branch? loc)
         (.-children loc)
         (.-make-node loc)
-        (peek (.l path))
+        (peek (.-l path))
         (assoc path :l (pop (.-l path)) :r (cons (.-node loc) (.-r path)))))))
 
 (defn leftmost
