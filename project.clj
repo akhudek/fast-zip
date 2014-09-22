@@ -1,4 +1,4 @@
-(defproject fast-zip "0.4.0"
+(defproject fast-zip "0.5.0-SNAPSHOT"
   :description "A modification of clojure.zip that uses protocols and records."
   :url "https://github.com/akhudek/fast-zip"
   :license {:name "Eclipse Public License"
@@ -23,15 +23,28 @@
   :profiles {:dev
              {:dependencies
               [[perforate "0.3.3"]
-               [criterium "0.4.3"]]
+               [criterium "0.4.3"]
+               [org.bodil/cljs-noderepl "0.1.11"]
+               [com.cemerick/piggieback "0.1.3"]]
+              :node-dependencies
+              [benchmark "1.0.0"]
+              :plugins
+              [[lein-npm "0.4.0"]
+               [com.cemerick/austin "0.1.5"]]
               :aliases
               {"clean-test" ~(clojure.string/split
                               "do test, cljsbuild clean, cljsbuild test"
-                              #" ")}}}
+                              #" ")
+               "clean-bench" ~(clojure.string/split
+                               "do cljsbuild clean, cljsbuild once bench"
+                               #" ")}
+              :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}}
 
   :perforate {:environments [{:namespaces [fast-zip.core-bench]}]}
+
   :scm {:name "git"
         :url  "https://github.com/akhudek/fast-zip"}
+
   :deploy-repositories
   [["clojars" {:signing {:gpg-key "D8B883CA"}}]]
 
@@ -40,6 +53,13 @@
              :source-paths ["src/cljs" "test/cljs"]
              :compiler {:output-to "target/cljs/testable.js"
                         :optimizations :whitespace
+                        :pretty-print true}}
+            {:id "bench"
+             :source-paths ["src/cljs" "benchmarks"]
+             :notify-command ["node" "target/cljs/benchmark.js"]
+             :compiler {:target :nodejs
+                        :output-to "target/cljs/benchmark.js"
+                        :optimizations :simple
                         :pretty-print true}}]
    :test-commands {"unit-tests" ["phantomjs" :runner
                                  "target/cljs/testable.js"]}})
