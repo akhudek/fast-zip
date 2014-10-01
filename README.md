@@ -5,7 +5,7 @@ A modified version of clojure.zip that uses records internally.
 ## Usage
 
 ```clojure
-[fast-zip "0.4.0"]
+[fast-zip "0.5.0"]
 ```
 
 This is a drop in replacement for clojure.zip. Simply require ``fast-zip.core``
@@ -40,6 +40,9 @@ run, use ``lein perforate``.
        Execution time upper quantile : 969.813479 µs (97.5%)
                        Overhead used : 1.947263 ns
 
+For the clojurescript version, make sure you have node.js installed along
+with the ``benchmark`` module. Then use ``lein clean-bench``
+
 ## TODO
 
 * Create benchmarks that represent more functionality and different use
@@ -51,6 +54,7 @@ Thanks to
 
 * Brandon Bloom for his advice.
 * Zach Tellman
+* Joel Holdbrooks for the ClojureScript version.
 
 ## License
 

@@ -1,5 +1,9 @@
 # Release History
 
+## 0.5.0
+
+* ClojureScript support thanks to Joel Holdbrooks.
+
 ## 0.4.0
 
 * Bug fixes for empty seq-zip cases.
