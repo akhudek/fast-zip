@@ -48,13 +48,14 @@ with the ``benchmark`` module. Then use ``lein clean-bench``
 * Create benchmarks that represent more functionality and different use
   cases.
 
-## Thanks
+## Contributors 
 
 Thanks to
 
 * Brandon Bloom for his advice.
 * Zach Tellman
 * Joel Holdbrooks for the ClojureScript version.
+* David Thomas Hume
 
 ## License
 

@@ -1,5 +1,38 @@
 # Benchmark History
 
+## 0.5.1
+Run on a mac mini with a 2.6ghz core i7, osx 10.9.5, node.js 0.10.31,
+and java 1.7.0_51. ClojureScript uses simple optimization.
+
+### ClojureScript
+    :clojure.zip x 114 ops/sec ±0.64% (85 runs sampled)
+    :fast-zip x 197 ops/sec ±0.62% (88 runs sampled)
+    Fastest is :fast-zip
+
+### Clojure
+    ======================
+    WARNING: Final GC required 1.352547229118579 % of runtime
+    Goal:  Benchmark vector zip.
+    -----
+    Case:  :clojure.zip
+    Evaluation count : 58260 in 60 samples of 971 calls.
+                 Execution time mean : 1.049589 ms
+        Execution time std-deviation : 17.962641 µs
+       Execution time lower quantile : 1.018927 ms ( 2.5%)
+       Execution time upper quantile : 1.082843 ms (97.5%)
+                       Overhead used : 1.896478 ns
+
+    Case:  :fast-zip
+    Evaluation count : 326400 in 60 samples of 5440 calls.
+                 Execution time mean : 185.443364 µs
+        Execution time std-deviation : 2.938738 µs
+       Execution time lower quantile : 181.131376 µs ( 2.5%)
+       Execution time upper quantile : 192.279133 µs (97.5%)
+                       Overhead used : 1.896478 ns
+
+    Found 2 outliers in 60 samples (3.3333 %)
+        low-severe	 2 (3.3333 %)
+     Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
 
 ## 0.5.0
 
