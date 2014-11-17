@@ -5,7 +5,7 @@ A modified version of clojure.zip that uses records internally.
 ## Usage
 
 ```clojure
-[fast-zip "0.5.0"]
+[fast-zip "0.5.1"]
 ```
 
 This is a drop in replacement for clojure.zip. Simply require ``fast-zip.core``
@@ -48,7 +48,7 @@ with the ``benchmark`` module. Then use ``lein clean-bench``
 * Create benchmarks that represent more functionality and different use
   cases.
 
-## Contributors 
+## Contributors
 
 Thanks to
 
