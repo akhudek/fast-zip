@@ -251,8 +251,8 @@
         (and (branch? loc) (down loc))
         (right loc)
          (loop [p loc]
-           (if (up p)
-            (or (right (up p)) (recur (up p)))
+           (if-let [u (up p)]
+            (or (right u) (recur u))
             (ZipperLocation. (.-branch? loc) (.-children loc) (.-make-node loc) (.-node p) :end)))))))
 
 (defn prev
