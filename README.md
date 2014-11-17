@@ -13,35 +13,44 @@ instead of ``clojure.zip``.
 
 ## Benchmark
 
-The below  traverses a vector zip with three levels and sums the numbers. To
-run, use ``lein perforate``.
+The below  traverses a vector zip with three levels and sums the numbers.
+
+### Clojure
+
+To run, use ``lein perforate``.
 
     ======================
-    WARNING: Final GC required 1.450308932831415 % of runtime
+    WARNING: Final GC required 1.352547229118579 % of runtime
     Goal:  Benchmark vector zip.
     -----
+    Case:  :clojure.zip
+    Evaluation count : 58260 in 60 samples of 971 calls.
+                 Execution time mean : 1.049589 ms
+        Execution time std-deviation : 17.962641 µs
+       Execution time lower quantile : 1.018927 ms ( 2.5%)
+       Execution time upper quantile : 1.082843 ms (97.5%)
+                       Overhead used : 1.896478 ns
+
     Case:  :fast-zip
-    Evaluation count : 246120 in 60 samples of 4102 calls.
-                 Execution time mean : 242.777689 µs
-        Execution time std-deviation : 1.965914 µs
-       Execution time lower quantile : 238.996103 µs ( 2.5%)
-       Execution time upper quantile : 247.075613 µs (97.5%)
-                       Overhead used : 1.947263 ns
+    Evaluation count : 326400 in 60 samples of 5440 calls.
+                 Execution time mean : 185.443364 µs
+        Execution time std-deviation : 2.938738 µs
+       Execution time lower quantile : 181.131376 µs ( 2.5%)
+       Execution time upper quantile : 192.279133 µs (97.5%)
+                       Overhead used : 1.896478 ns
 
     Found 2 outliers in 60 samples (3.3333 %)
         low-severe	 2 (3.3333 %)
      Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
 
-    Case:  :clojure.zip
-    Evaluation count : 62820 in 60 samples of 1047 calls.
-                 Execution time mean : 960.326181 µs
-        Execution time std-deviation : 4.915537 µs
-       Execution time lower quantile : 950.592132 µs ( 2.5%)
-       Execution time upper quantile : 969.813479 µs (97.5%)
-                       Overhead used : 1.947263 ns
+### ClojureScript
 
 For the clojurescript version, make sure you have node.js installed along
 with the ``benchmark`` module. Then use ``lein clean-bench``
+
+    :clojure.zip x 114 ops/sec ±0.64% (85 runs sampled)
+    :fast-zip x 197 ops/sec ±0.62% (88 runs sampled)
+    Fastest is :fast-zip
 
 ## TODO
 
