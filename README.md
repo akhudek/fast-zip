@@ -5,7 +5,7 @@ A modified version of clojure.zip that uses records internally.
 ## Usage
 
 ```clojure
-[fast-zip "0.5.1"]
+[fast-zip "0.5.2"]
 ```
 
 This is a drop in replacement for clojure.zip. Simply require ``fast-zip.core``
