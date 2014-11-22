@@ -1,5 +1,9 @@
 # Release History
 
+## 0.5.2
+
+* Bug fix for leftmost.
+
 ## 0.5.1
 
 * Avoid redundant calls to up internally.
