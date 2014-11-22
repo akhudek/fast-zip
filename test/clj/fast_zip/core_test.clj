@@ -39,7 +39,9 @@
     (is (= (-> dz z/down z/rightmost z/lefts)
            '([a * b] +)))
     (is (= (-> dz z/down z/right z/right z/leftmost z/rights)
-           '(+ [c * d]))))
+           '(+ [c * d])))
+    (is (= (-> (z/seq-zip '(a b c d)) z/down z/right z/right z/leftmost z/node)
+           'a)))
 
   (testing "Edits"
     (is (= (-> dz z/down z/right z/right z/down z/right (z/replace '/) z/root)

@@ -191,8 +191,8 @@
         (.branch? loc)
         (.children loc)
         (.make-node loc)
-        (peek (.l path))
-        (assoc path :l [] :r (concat (clojure.core/next (reverse (.l path))) [(.node loc)] (.r path))))
+        (last (.l path))
+        (assoc path :l '() :r (concat (clojure.core/next (reverse (.l path))) [(.node loc)] (.r path))))
       loc)))
 
 (defn insert-left
