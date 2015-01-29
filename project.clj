@@ -1,15 +1,15 @@
-(defproject fast-zip "0.5.2"
+(defproject fast-zip "0.6.0-SNAPSHOT"
   :description "A modification of clojure.zip that uses protocols and records."
   :url "https://github.com/akhudek/fast-zip"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.6.0" :scope "provided"]
-                 [org.clojure/clojurescript "0.0-2311" :scope "provided"]]
+                 [org.clojure/clojurescript "0.0-2657" :scope "provided"]]
 
   :plugins [[perforate "0.3.2"]
             [lein-cljsbuild "1.0.3"]
-            [com.cemerick/clojurescript.test "0.3.1"]]
+            [com.cemerick/clojurescript.test "0.3.3"]]
 
   :source-paths
   ["src/clj" "src/cljs"]
@@ -22,7 +22,7 @@
 
   :profiles {:dev
              {:dependencies
-              [[perforate "0.3.3"]
+              [[perforate "0.3.4"]
                [criterium "0.4.3"]
                [org.bodil/cljs-noderepl "0.1.11"]
                [com.cemerick/piggieback "0.1.3"]]

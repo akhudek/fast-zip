@@ -1,5 +1,9 @@
 # Release History
 
+## 0.6.0-SNAPSHOT
+
+* Switch CLJ version to `deftype` implementation for further 2x speedup
+
 ## 0.5.2
 
 * Bug fix for leftmost.
