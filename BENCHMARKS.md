@@ -4,10 +4,13 @@
 
 Run on a MBP2010 with a 2.66ghz core i7, osx 10.8.5 and java 1.8.0_25-b17.
 
-### Clojure
+### ClojureScript
 
-FYI 0.5.2 mean stats on this machine: clj.zip: 1.178178 ms, fast-zip: 224.407510 µs
-Switch to `deftype` vs. `defrecord` caused 2x improvement!
+    :clojure.zip x 67.74 ops/sec ±6.53% (66 runs sampled)
+    :fast-zip x 392 ops/sec ±1.88% (89 runs sampled)
+    Fastest is :fast-zip
+
+### Clojure
 
     ======================
     WARNING: Final GC required 2.8625100996663813 % of runtime
@@ -34,15 +37,18 @@ Switch to `deftype` vs. `defrecord` caused 2x improvement!
                        Overhead used : 2.613253 ns
 
 ## 0.5.1
+
 Run on a mac mini with a 2.6ghz core i7, osx 10.9.5, node.js 0.10.31,
 and java 1.7.0_51. ClojureScript uses simple optimization.
 
 ### ClojureScript
+
     :clojure.zip x 114 ops/sec ±0.64% (85 runs sampled)
     :fast-zip x 197 ops/sec ±0.62% (88 runs sampled)
     Fastest is :fast-zip
 
 ### Clojure
+
     ======================
     WARNING: Final GC required 1.352547229118579 % of runtime
     Goal:  Benchmark vector zip.
@@ -73,11 +79,13 @@ Run on a mac mini with a 2.6ghz core i7, osx 10.9.5, node.js 0.10.31,
 and java 1.7.0_51. ClojureScript uses simple optimization.
 
 ### ClojureScript
+
     :clojure.zip x 116 ops/sec ±0.65% (83 runs sampled)
     :fast-zip x 194 ops/sec ±0.85% (92 runs sampled)
     Fastest is :fast-zip 
 
 ### Clojure
+
     ======================
     WARNING: Final GC required 1.467359386689346 % of runtime
     Goal:  Benchmark vector zip.

@@ -1,6 +1,7 @@
 (ns fast-zip.core-test
   (:require
-    [clojure.test :refer :all]
+    #+cljs [cemerick.cljs.test :refer-macros [deftest testing is]]
+    #+clj [clojure.test :refer :all]
     [fast-zip.core :as z]))
 
 (def data '[[a * b] + [c * d]])
