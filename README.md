@@ -6,7 +6,7 @@ uses `deftype` internally and is written in CLJX format.
 ## Usage
 
 ```clojure
-[fast-zip "0.6.0-SNAPSHOT"]
+[fast-zip "0.6.0"]
 ```
 
 This is a drop in replacement for clojure.zip. Simply require `fast-zip.core`
@@ -14,7 +14,7 @@ instead of `clojure.zip`.
 
 ## Benchmark
 
-Since 0.6.0-SNAPSHOT a benchmark run consists of two analysis goals:
+Since 0.6.0 a benchmark run consists of two analysis goals:
 
 1. "walk" traverses a vector zip of three levels of ints and sums the numbers (reduction over leaves)
 2. "edit" same setup as for "walk", but actually edits each leaf `(* n 10)` and applies all changes at the end

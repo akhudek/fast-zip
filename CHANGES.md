@@ -1,6 +1,6 @@
 # Release History
 
-## 0.6.0-SNAPSHOT
+## 0.6.0
 
 * Switch CLJ version to `deftype` implementation for further 2x speedup
 * Refactor project as CLJX setup (to avoid/minimize code duplication)
