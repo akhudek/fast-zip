@@ -1,5 +1,11 @@
 # Release History
 
+## 0.6.0-SNAPSHOT
+
+* Switch CLJ version to `deftype` implementation for further 2x speedup
+* Refactor project as CLJX setup (to avoid/minimize code duplication)
+* Update benchmark setup for both CLJ & CLJS, add benchmarks
+
 ## 0.5.2
 
 * Bug fix for leftmost.
