@@ -15,9 +15,11 @@
   fast-zip.core
   (:refer-clojure :exclude [replace remove next]))
 
+(deftype ZipperOps [branch? children make-node])
+
 (deftype ZipperPath [l r ppath pnodes changed?])
 
-(deftype ZipperLocation [branch? children make-node node path])
+(deftype ZipperLocation [^ZipperOps ops node ^ZipperPath path])
 
 (defn zipper
   "Creates a new zipper structure.
@@ -33,7 +35,7 @@
   root is the root node."
   {:added "1.0"}
   [branch? children make-node root]
-  (ZipperLocation. branch? children make-node root nil))
+  (ZipperLocation. (ZipperOps. branch? children make-node) root nil))
 
 (defn seq-zip
   "Returns a zipper for nested sequences, given a root sequence"
@@ -75,18 +77,18 @@
 (defn branch?
   "Returns true if the node at loc is a branch"
   [^ZipperLocation loc]
-  ((.-branch? loc) (.-node loc)))
+  ((.-branch? ^ZipperOps (.-ops loc)) (.-node loc)))
 
 (defn children
   "Returns a seq of the children of node at loc, which must be a branch"
   [^ZipperLocation loc]
-  ((.-children loc) (.-node loc)))
+  ((.-children ^ZipperOps (.-ops loc)) (.-node loc)))
 
 (defn make-node
   "Returns a new branch node, given an existing node and new children.
   The loc is only used to supply the constructor."
   [^ZipperLocation loc node children]
-  ((.-make-node loc) node children))
+  ((.-make-node ^ZipperOps (.-ops loc)) node children))
 
 (defn path
   "Returns a seq of nodes leading to this loc"
@@ -111,9 +113,7 @@
     (when-let [cs (children loc)]
       (let [node (.-node loc), ^ZipperPath path (.-path loc)]
         (ZipperLocation.
-         (.-branch? loc)
-         (.-children loc)
-         (.-make-node loc)
+         (.-ops loc)
          (first cs)
          (ZipperPath.
           '()
@@ -125,21 +125,17 @@
 (defn up
   "Returns the loc of the parent of the node at this loc, or nil if at the top"
   [^ZipperLocation loc]
-  (let [node (.-node loc), ^ZipperPath path (.-path loc)]
+  (let [^ZipperPath path (.-path loc)]
     (when-let [pnodes (and path (.-pnodes path))]
       (let [pnode (peek pnodes)]
         (if (.-changed? path)
           (ZipperLocation.
-           (.-branch? loc)
-           (.-children loc)
-           (.-make-node loc)
-           (make-node loc pnode (concat (reverse (.-l path)) (cons node (.-r path))))
+           (.-ops loc)
+           (make-node loc pnode (concat (reverse (.-l path)) (cons (.-node loc) (.-r path))))
            (if-let [^ZipperPath ppath (.-ppath path)]
              (ZipperPath. (.-l ppath) (.-r ppath) (.-ppath ppath) (.-pnodes ppath) true)))
           (ZipperLocation.
-           (.-branch? loc)
-           (.-children loc)
-           (.-make-node loc)
+           (.-ops loc)
            pnode
            (.-ppath path)))))))
 
@@ -159,9 +155,7 @@
   (let [^ZipperPath path (.-path loc)]
     (when-let [r (and path (.-r path))]
       (ZipperLocation.
-       (.-branch? loc)
-       (.-children loc)
-       (.-make-node loc)
+       (.-ops loc)
        (first r)
        (ZipperPath.
         (conj (.-l path) (.-node loc))
@@ -176,9 +170,7 @@
   (let [^ZipperPath path (.-path loc)]
     (if-let [r (and path (.-r path))]
       (ZipperLocation.
-       (.-branch? loc)
-       (.-children loc)
-       (.-make-node loc)
+       (.-ops loc)
        (last r)
        (ZipperPath.
         (apply conj (.-l path) (.-node loc) (butlast r))
@@ -194,11 +186,14 @@
   (let [^ZipperPath path (.-path loc)]
     (when (and path (seq (.-l path)))
       (ZipperLocation.
-       (.-branch? loc)
-       (.-children loc)
-       (.-make-node loc)
+       (.-ops loc)
        (peek (.-l path))
-       (ZipperPath. (pop (.-l path)) (cons (.-node loc) (.-r path)) (.-ppath path) (.-pnodes path) (.-changed? path))))))
+       (ZipperPath.
+        (pop (.-l path))
+        (cons (.-node loc) (.-r path))
+        (.-ppath path)
+        (.-pnodes path)
+        (.-changed? path))))))
 
 (defn leftmost
   "Returns the loc of the leftmost sibling of the node at this loc, or self"
@@ -206,14 +201,13 @@
   (let [^ZipperPath path (.-path loc)]
     (if (and path (seq (.-l path)))
       (ZipperLocation.
-       (.-branch? loc)
-       (.-children loc)
-       (.-make-node loc)
+       (.-ops loc)
        (last (.-l path))
        (ZipperPath.
         '()
         (concat
-         #+clj (.next ^clojure.lang.ISeq (reverse (.-l path))) #+cljs (cljs.core/next (reverse (.-l path)))
+         #+clj (.next ^clojure.lang.ISeq (reverse (.-l path)))
+         #+cljs (cljs.core/next (reverse (.-l path)))
          [(.-node loc)] (.-r path))
         (.-ppath path)
         (.-pnodes path)
@@ -225,9 +219,7 @@
   [^ZipperLocation loc item]
   (if-let [^ZipperPath path (.-path loc)]
     (ZipperLocation.
-     (.-branch? loc)
-     (.-children loc)
-     (.-make-node loc)
+     (.-ops loc)
      (.-node loc)
      (ZipperPath. (conj (.-l path) item) (.-r path) (.-ppath path) (.-pnodes path) true))
     (throw (new #+clj Exception #+cljs js/Error "Insert at top"))))
@@ -237,9 +229,7 @@
   [^ZipperLocation loc item]
   (if-let [^ZipperPath path (.-path loc)]
     (ZipperLocation.
-     (.-branch? loc)
-     (.-children loc)
-     (.-make-node loc)
+     (.-ops loc)
      (.-node loc)
      (ZipperPath. (.-l path) (cons item (.-r path)) (.-ppath path) (.-pnodes path) true))
     (throw (new #+clj Exception #+cljs js/Error "Insert at top"))))
@@ -248,9 +238,7 @@
   "Replaces the node at this loc, without moving"
   [^ZipperLocation loc node]
   (ZipperLocation.
-   (.-branch? loc)
-   (.-children loc)
-   (.-make-node loc)
+   (.-ops loc)
    node
    (if-let [^ZipperPath path (.-path loc)]
      (ZipperPath. (.-l path) (.-r path) (.-ppath path) (.-pnodes path) true))))
@@ -279,7 +267,7 @@
        (loop [p loc]
          (if-let [u (up p)]
            (or (right u) (recur u))
-           (ZipperLocation. (.-branch? loc) (.-children loc) (.-make-node loc) (.-node p) :end)))))))
+           (ZipperLocation. (.-ops loc) (.-node p) :end)))))))
 
 (defn prev
   "Moves to the previous loc in the hierarchy, depth-first. If already at the root, returns nil."
@@ -302,18 +290,14 @@
   (if-let [^ZipperPath path (.-path loc)]
     (if (pos? (count (.-l path)))
       (loop [loc (ZipperLocation.
-                  (.-branch? loc)
-                  (.-children loc)
-                  (.-make-node loc)
+                  (.-ops loc)
                   (peek (.-l path))
                   (ZipperPath. (pop (.-l path)) (.-r path) (.-ppath path) (.-pnodes path) true))]
         (if-let [child (and (branch? loc) (down loc))]
           (recur (rightmost child))
           loc))
       (ZipperLocation.
-       (.-branch? loc)
-       (.-children loc)
-       (.-make-node loc)
+       (.-ops loc)
        (make-node loc (peek (.-pnodes path)) (.-r path))
        (if-let [^ZipperPath ppath (.-ppath path)]
          (if ppath (ZipperPath. (.-l ppath) (.-r ppath) (.-ppath ppath) (.-pnodes ppath) true)))))
