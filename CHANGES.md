@@ -1,5 +1,9 @@
 # Release History
 
+## 0.6.1
+
+* Add ZipperOps deftype to minimize copying effort for new ZipperLocation instances
+
 ## 0.6.0
 
 * Switch CLJ version to `deftype` implementation for further 2x speedup
