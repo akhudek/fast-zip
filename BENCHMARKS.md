@@ -1,6 +1,6 @@
 # Benchmark History
 
-## 0.6.1-SNAPSHOT
+## 0.6.1
 
 Run on a MBP2010 with a 2.66ghz core i7, osx 10.8.5 and java 1.8.0_25-b17.
 

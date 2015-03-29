@@ -1,4 +1,4 @@
-(defproject fast-zip "0.6.1-SNAPSHOT"
+(defproject fast-zip "0.6.1"
   :description "A modification of clojure.zip that uses protocols and records."
   :url "https://github.com/akhudek/fast-zip"
   :license {:name "Eclipse Public License"
