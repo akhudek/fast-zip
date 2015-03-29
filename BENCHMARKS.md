@@ -1,6 +1,80 @@
 # Benchmark History
 
-## 0.6.0-SNAPSHOT
+## 0.6.1
+
+Run on a MBP2010 with a 2.66ghz core i7, osx 10.8.5 and java 1.8.0_25-b17.
+
+### ClojureScript
+
+    Benchmark: vector zip walk...
+    :clojure.zip.walk x 93.01 ops/sec ±5.02% (73 runs sampled)
+    :fast-zip.walk x 586 ops/sec ±1.26% (89 runs sampled)
+    Fastest is :fast-zip.walk
+    Benchmark: vector zip edit...
+    :clojure.zip.edit x 41.74 ops/sec ±1.45% (57 runs sampled)
+    :fast-zip.edit x 114 ops/sec ±1.41% (74 runs sampled)
+    Fastest is :fast-zip.edit
+
+### Clojure
+
+    WARNING: Final GC required 3.090076669784014 % of runtime
+    Goal:  Benchmark vector zip edit.
+    -----
+    Case:  :fast-zip
+    Evaluation count : 107640 in 60 samples of 1794 calls.
+                 Execution time mean : 576.321696 µs
+        Execution time std-deviation : 57.513398 µs
+       Execution time lower quantile : 526.397688 µs ( 2.5%)
+       Execution time upper quantile : 713.719117 µs (97.5%)
+                       Overhead used : 2.121629 ns
+    
+    Found 2 outliers in 60 samples (3.3333 %)
+    	low-severe	 1 (1.6667 %)
+    	low-mild	 1 (1.6667 %)
+     Variance from outliers : 70.3236 % Variance is severely inflated by outliers
+    
+    Case:  :clojure.zip
+    Evaluation count : 34500 in 60 samples of 575 calls.
+                 Execution time mean : 1.819284 ms
+        Execution time std-deviation : 163.955858 µs
+       Execution time lower quantile : 1.696950 ms ( 2.5%)
+       Execution time upper quantile : 2.178507 ms (97.5%)
+                       Overhead used : 2.121629 ns
+    
+    Found 6 outliers in 60 samples (10.0000 %)
+    	low-severe	 4 (6.6667 %)
+    	low-mild	 2 (3.3333 %)
+     Variance from outliers : 65.2416 % Variance is severely inflated by outliers
+    
+    Goal:  Benchmark vector zip walk.
+    -----
+    Case:  :fast-zip
+    Evaluation count : 592080 in 60 samples of 9868 calls.
+                 Execution time mean : 102.383653 µs
+        Execution time std-deviation : 1.349685 µs
+       Execution time lower quantile : 100.804221 µs ( 2.5%)
+       Execution time upper quantile : 106.239075 µs (97.5%)
+                       Overhead used : 2.121629 ns
+    
+    Found 4 outliers in 60 samples (6.6667 %)
+    	low-severe	 3 (5.0000 %)
+    	low-mild	 1 (1.6667 %)
+     Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+    
+    Case:  :clojure.zip
+    Evaluation count : 54240 in 60 samples of 904 calls.
+                 Execution time mean : 1.152677 ms
+        Execution time std-deviation : 98.687775 µs
+       Execution time lower quantile : 1.078808 ms ( 2.5%)
+       Execution time upper quantile : 1.423912 ms (97.5%)
+                       Overhead used : 2.121629 ns
+    
+    Found 8 outliers in 60 samples (13.3333 %)
+    	low-severe	 5 (8.3333 %)
+    	low-mild	 3 (5.0000 %)
+     Variance from outliers : 61.9083 % Variance is severely inflated by outliers
+
+## 0.6.0
 
 Added new benchmarks for node editing. Existing/previous benchmark goal now named as "vector zip walk"...
 
