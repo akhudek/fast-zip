@@ -1,5 +1,11 @@
 # Release History
 
+## 0.7.0
+
+* Replace CLJX sources with CLJC (reader conditionals)
+* Update CLJ & CLJS dependencies (1.7.x)
+* Remove Piggieback & Austin dev dependencies
+
 ## 0.6.1
 
 * Add ZipperOps deftype to minimize copying effort for new ZipperLocation instances

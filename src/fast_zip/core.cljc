@@ -117,7 +117,7 @@
          (first cs)
          (ZipperPath.
           '()
-          #+clj (.next ^clojure.lang.ISeq cs) #+cljs (cljs.core/next cs)
+          #?(:clj (.next ^clojure.lang.ISeq cs) :cljs (cljs.core/next cs))
           path
           (if path (conj (.-pnodes path) node) [node])
           nil))))))
@@ -142,7 +142,7 @@
 (defn root
   "zips all the way up and returns the root node, reflecting any changes."
   [^ZipperLocation loc]
-  (if (#+clj identical? #+cljs = :end (.-path loc))
+  (if (#?(:clj identical? :cljs =) :end (.-path loc))
     (.-node loc)
     (let [p (up loc)]
       (if p
@@ -159,7 +159,7 @@
        (first r)
        (ZipperPath.
         (conj (.-l path) (.-node loc))
-        #+clj (.next ^clojure.lang.ISeq r) #+cljs (cljs.core/next r)
+        #?(:clj (.next ^clojure.lang.ISeq r) :cljs (cljs.core/next r))
         (.-ppath path)
         (.-pnodes path)
         (.-changed? path))))))
@@ -206,8 +206,8 @@
        (ZipperPath.
         '()
         (concat
-         #+clj (.next ^clojure.lang.ISeq (reverse (.-l path)))
-         #+cljs (cljs.core/next (reverse (.-l path)))
+         #?(:clj (.next ^clojure.lang.ISeq (reverse (.-l path)))
+            :cljs (cljs.core/next (reverse (.-l path))))
          [(.-node loc)] (.-r path))
         (.-ppath path)
         (.-pnodes path)
@@ -222,7 +222,7 @@
      (.-ops loc)
      (.-node loc)
      (ZipperPath. (conj (.-l path) item) (.-r path) (.-ppath path) (.-pnodes path) true))
-    (throw (new #+clj Exception #+cljs js/Error "Insert at top"))))
+    (throw (new #?(:clj Exception :cljs js/Error) "Insert at top"))))
 
 (defn insert-right
   "Inserts the item as the right sibling of the node at this loc, without moving"
@@ -232,7 +232,7 @@
      (.-ops loc)
      (.-node loc)
      (ZipperPath. (.-l path) (cons item (.-r path)) (.-ppath path) (.-pnodes path) true))
-    (throw (new #+clj Exception #+cljs js/Error "Insert at top"))))
+    (throw (new #?(:clj Exception :cljs js/Error) "Insert at top"))))
 
 (defn replace
   "Replaces the node at this loc, without moving"
@@ -259,7 +259,7 @@
   at the end, stays there."
   [^ZipperLocation loc]
   (let [path (.-path loc)]
-    (if (#+clj identical? #+cljs = :end path)
+    (if (#?(:clj identical? :cljs =) :end path)
       loc
       (or
        (if (branch? loc) (down loc))
@@ -282,7 +282,7 @@
 (defn end?
   "Returns true if loc represents the end of a depth-first walk"
   [^ZipperLocation loc]
-  (#+clj identical? #+cljs = :end (.-path loc)))
+  (#?(:clj identical? :cljs =) :end (.-path loc)))
 
 (defn remove
   "Removes the node at loc, returning the loc that would have preceded it in a depth-first walk."
@@ -301,7 +301,7 @@
        (make-node loc (peek (.-pnodes path)) (.-r path))
        (if-let [^ZipperPath ppath (.-ppath path)]
          (if ppath (ZipperPath. (.-l ppath) (.-r ppath) (.-ppath ppath) (.-pnodes ppath) true)))))
-    (throw (new #+clj Exception #+cljs js/Error "Remove at top"))))
+    (throw (new #?(:clj Exception :cljs js/Error) "Remove at top"))))
 
 (defn edit
   "Replaces the node at this loc with the value of (f node args)"
