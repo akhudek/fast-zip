@@ -51,12 +51,15 @@
    #(zip-edit (z/vector-zip big-vec) z/root z/node z/edit z/next z/end?)
    #(zip-edit (fz/vector-zip big-vec) fz/root fz/node fz/edit fz/next fz/end?)))
 
-(do
+(defn main
+  []
   (.log js/console "Benchmark: vector zip walk...")
   (.run bench-walk)
   (.log js/console "Benchmark: vector zip edit...")
   (.run bench-edit)
   (.exit js/process))
+
+(set! *main-cli-fn* main)
 
 ;; Benchmark vector zip.
 ;; :clojure.zip x 95.20 ops/sec ±1.75% (81 runs sampled)
