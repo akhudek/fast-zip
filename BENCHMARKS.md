@@ -1,5 +1,68 @@
 # Benchmark History
 
+## 0.7.0
+
+Run on a Late 2012 Mac mini witha 2.6 GHZ core i7, osx 10.10.5 and java 1.8.0_45-b14.
+
+### ClojureScript
+
+    Benchmark: vector zip walk...
+    :clojure.zip.walk x 209 ops/sec ±0.68% (91 runs sampled)
+    :fast-zip.walk x 695 ops/sec ±1.03% (94 runs sampled)
+    Fastest is :fast-zip.walk
+    Benchmark: vector zip edit...
+    :clojure.zip.edit x 116 ops/sec ±1.08% (77 runs sampled)
+    :fast-zip.edit x 266 ops/sec ±0.69% (93 runs sampled)
+    Fastest is :fast-zip.edit
+    
+### Clojure
+
+    WARNING: Final GC required 1.1305691949835102 % of runtime
+    Goal:  Benchmark vector zip walk.
+    -----
+    Case:  :clojure.zip
+    Evaluation count : 51360 in 60 samples of 856 calls.
+                 Execution time mean : 1.206185 ms
+        Execution time std-deviation : 29.527194 µs
+       Execution time lower quantile : 1.179620 ms ( 2.5%)
+       Execution time upper quantile : 1.239860 ms (97.5%)
+                       Overhead used : 1.809668 ns
+
+    Found 3 outliers in 60 samples (5.0000 %)
+    	low-severe	 2 (3.3333 %)
+    	low-mild	 1 (1.6667 %)
+     Variance from outliers : 12.5608 % Variance is moderately inflated by outliers
+
+    Case:  :fast-zip
+    Evaluation count : 554760 in 60 samples of 9246 calls.
+                 Execution time mean : 108.874189 µs
+        Execution time std-deviation : 1.450027 µs
+       Execution time lower quantile : 106.084605 µs ( 2.5%)
+       Execution time upper quantile : 112.005702 µs (97.5%)
+                       Overhead used : 1.809668 ns
+
+    Goal:  Benchmark vector zip edit.
+    -----
+    Case:  :clojure.zip
+    Evaluation count : 12660 in 60 samples of 211 calls.
+                 Execution time mean : 5.047109 ms
+        Execution time std-deviation : 99.896647 µs
+       Execution time lower quantile : 4.918917 ms ( 2.5%)
+       Execution time upper quantile : 5.292446 ms (97.5%)
+                       Overhead used : 1.809668 ns
+
+    Found 2 outliers in 60 samples (3.3333 %)
+    	low-severe	 2 (3.3333 %)
+     Variance from outliers : 7.8717 % Variance is slightly inflated by outliers
+
+    Case:  :fast-zip
+    Evaluation count : 112260 in 60 samples of 1871 calls.
+                 Execution time mean : 536.307234 µs
+        Execution time std-deviation : 6.423185 µs
+       Execution time lower quantile : 521.727835 µs ( 2.5%)
+       Execution time upper quantile : 545.561598 µs (97.5%)
+                       Overhead used : 1.809668 ns
+
 ## 0.6.1
 
 Run on a MBP2010 with a 2.66ghz core i7, osx 10.8.5 and java 1.8.0_25-b17.

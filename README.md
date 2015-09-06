@@ -5,6 +5,14 @@ uses `deftype` internally and is written in CLJX format.
 
 ## Usage
 
+For Clojure 1.7 use:
+
+```clojure
+[fast-zip "0.7.0"]
+```
+
+For previous versions use:
+
 ```clojure
 [fast-zip "0.6.1"]
 ```
@@ -105,7 +113,7 @@ Thanks to
 * Zach Tellman
 * Joel Holdbrooks for the ClojureScript version.
 * David Thomas Hume
-* Karsten Schmidt (CLJX restructure, deftype impl & benchmark updates)
+* Karsten Schmidt (CLJX restructure, cljc restructure, deftype impl & benchmark updates)
 
 ## License
 
